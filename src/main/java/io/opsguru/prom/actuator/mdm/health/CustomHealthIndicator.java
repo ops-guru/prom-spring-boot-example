@@ -1,4 +1,4 @@
-package io.opsguru.prom.actuator.health;
+package io.opsguru.prom.actuator.mdm.health;
 
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;

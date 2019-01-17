@@ -1,6 +1,7 @@
-package io.opsguru.prom.actuator.controller;
+package io.opsguru.prom.actuator.mdm.controller;
 
 
+import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.Timer;
@@ -49,7 +50,21 @@ public class SampleController {
             delay = random.nextInt(10);
         }
         TimeUnit.SECONDS.sleep(delay);
-        sample.stop(registry.timer("slow.api.timer", "region", "us-east-1"));
+        sample.stop(registry.timer("slow.api.timer", "api.version", "v1"));
+        return "Result";
+    }
+
+    /*
+        README: This method demonstrates simple timer (slow.api.timer) and tags (region=us-east-1)
+     */
+    @Timed(value = "slow.api.timer", extraTags = {"api.version", "v2"})
+    @GetMapping("/slow_api/v1")
+    public String timeConsumingAPIV2(@RequestParam(value = "delay", defaultValue = "0") Integer delay) throws InterruptedException {
+        if(delay == 0) {
+            Random random = new Random();
+            delay = random.nextInt(10);
+        }
+        TimeUnit.SECONDS.sleep(delay);
         return "Result";
     }
 }
