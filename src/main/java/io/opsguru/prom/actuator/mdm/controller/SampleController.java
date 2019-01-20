@@ -31,7 +31,7 @@ public class SampleController {
     /*
         README: This method demonstrates collection size gauge (unique_names_count) and counter (received.hellos)
      */
-    @GetMapping("/")
+    @GetMapping("/api/v1/hello")
     public String sayHello(@RequestParam(value = "name", defaultValue = "Guest") String name) {
         this.counter.increment();
         this.names.add(name);
@@ -42,7 +42,7 @@ public class SampleController {
     /*
         README: This method demonstrates simple timer (slow.api.timer) and tags (region=us-east-1)
      */
-    @GetMapping("/slow_api")
+    @GetMapping("/api/v1/slow")
     public String timeConsumingAPI(@RequestParam(value = "delay", defaultValue = "0") Integer delay) throws InterruptedException {
         Timer.Sample sample = Timer.start(registry);
         if(delay == 0) {
@@ -58,7 +58,7 @@ public class SampleController {
         README: This method demonstrates simple timer (slow.api.timer) and tags (region=us-east-1)
      */
     @Timed(value = "slow.api.timer", extraTags = {"api.version", "v2"})
-    @GetMapping("/slow_api/v1")
+    @GetMapping("/api/v2/slow")
     public String timeConsumingAPIV2(@RequestParam(value = "delay", defaultValue = "0") Integer delay) throws InterruptedException {
         if(delay == 0) {
             Random random = new Random();
@@ -66,5 +66,15 @@ public class SampleController {
         }
         TimeUnit.SECONDS.sleep(delay);
         return "Result";
+    }
+
+    @GetMapping("/api/v1/failure")
+    public String failureExample(@RequestParam(value = "delay", defaultValue = "0") Integer delay) {
+        throw new RuntimeException("method to collect failure metrics");
+    }
+
+    @GetMapping("/docs/swagger")
+    public String swagger(@RequestParam(value = "delay", defaultValue = "0") Integer delay) {
+        return "Swag";
     }
 }
